@@ -12,7 +12,6 @@ import pl.coderslab.repository.UserRepository;
 
 import javax.validation.Valid;
 import javax.validation.Validator;
-import java.awt.print.Book;
 import java.util.List;
 
 @Controller
@@ -27,21 +26,21 @@ public class UserController {
     @Autowired
     UserRepository userRepository;
 
-    @GetMapping("/user/{id}/tweets")
-    public String showTweetsByUserId(@PathVariable Long id, Model model){
-        List<Tweet> tweets = tweetRepository.findAllByUserId(id);
-        model.addAttribute("tweets",tweets);
-
-        return "TweetByUserId";
-    }
-
-    @GetMapping("/user/search-tweets")
-    public String showTweetsByTitleCreated(Model model){
-        List<Tweet> tweets = tweetRepository.findAllTweetsByTitleStartingWithSortedByCreated("a%");
-        model.addAttribute("tweets",tweets);
-
-        return "TweetByTitlePart";
-    }
+//    @GetMapping("/user/{id}/tweets")
+//    public String showTweetsByUserId(@PathVariable Long id, Model model){
+//        List<Tweet> tweets = tweetRepository.findAllByUserId(id);
+//        model.addAttribute("tweets",tweets);
+//
+//        return "TweetByUserId";
+//    }
+//
+//    @GetMapping("/user/search-tweets")
+//    public String showTweetsByTitleCreated(Model model){
+//        List<Tweet> tweets = tweetRepository.findAllTweetsByTitleStartingWithSortedByCreated("a%");
+//        model.addAttribute("tweets",tweets);
+//
+//        return "TweetByTitlePart";
+//    }
 
     @GetMapping("/user/add")
     public String userForm(Model model){
