@@ -15,7 +15,8 @@
 </head>
 <body>
 
-<p><a href="/logout">Logout</a></p>
+<jsp:include page="header.jsp"/>
+
 <h1>Twitter home page </h1>
 
 <form:form modelAttribute="tweet" method="post" cssClass="jumbotron">
@@ -32,17 +33,25 @@
 <ul>
     <c:forEach items="${tweets}" var="element">
         <li>
-            <h2>${element.text}</h2>
+            <h2>
+                <a href="/user/show/${element.user.id}">@${element.user.username}</a>
+                :
+                    <em>
+                        <a href="/tweet/show/${element.id}">${element.text}</a>
+                    </em>
+                </h2>
             <p>Tweet no: ${element.id}. Created: ${element.created}</p>
             <ul>
                 <h3>Comments: </h3>
                 <p><a href="/comment/add/${element.id}">Add comment</a></p>
 
-                <c:forEach items="${element.comments}" varStatus="status">
+                <c:forEach items="${element.comments}" var="comment" varStatus="status">
                     <li>
                         <p>
-                            @(${element.comments[fn:length(element.comments)-status.count].user.username}):
-                                ${element.comments[fn:length(element.comments)-status.count].text}
+                            <a href="/user/show/${element.comments[fn:length(element.comments)-status.count].user.id}">
+                                @${element.comments[fn:length(element.comments)-status.count].user.username}:
+                            </a>
+                                    ${element.comments[fn:length(element.comments)-status.count].text}
                         </p>
 
                     </li>

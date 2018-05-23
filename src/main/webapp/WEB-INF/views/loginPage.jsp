@@ -13,6 +13,7 @@
     <title>Title</title>
 </head>
 <body>
+<jsp:include page="header.jsp"/>
 
 <h1>Login page </h1>
 

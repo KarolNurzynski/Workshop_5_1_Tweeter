@@ -12,6 +12,7 @@ import pl.coderslab.service.MessageService;
 import pl.coderslab.service.TweetService;
 import pl.coderslab.service.UserService;
 
+import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import javax.validation.Validator;
 import java.time.LocalDateTime;
@@ -33,9 +34,16 @@ public class MessageController {
     MessageService messageService;
 
     @GetMapping("/message/add/{sender_id}/{receiver_id}")
-    public String sendMessage(Model model) {
-        model.addAttribute("message", new Message());
-        return "messageForm";
+    public String sendMessage(Model model,
+                              HttpSession sess,
+                              @PathVariable Long sender_id) {
+        Long user_id = (Long) sess.getAttribute("user_id");
+        if (user_id==sender_id) {
+            model.addAttribute("message", new Message());
+            return "messageForm";
+        } else {
+            return "redirect:/";
+        }
     }
 
     @PostMapping("/message/add/{sender_id}/{receiver_id}")

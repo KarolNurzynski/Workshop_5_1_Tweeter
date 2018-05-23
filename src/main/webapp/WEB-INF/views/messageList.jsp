@@ -14,6 +14,7 @@
     <title>Title</title>
 </head>
 <body>
+<jsp:include page="header.jsp"/>
 
 <h2>List of messages: </h2>
 

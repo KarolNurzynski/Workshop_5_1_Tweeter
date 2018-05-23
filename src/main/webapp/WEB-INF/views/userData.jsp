@@ -15,6 +15,7 @@
     <title>Title</title>
 </head>
 <body>
+<jsp:include page="header.jsp"/>
 
 <h1>User id: ${user.id}. Username: @${user.username}</h1>
 <h2>List of tweets: </h2>

@@ -12,6 +12,7 @@
     <title>Title</title>
 </head>
 <body>
+<jsp:include page="header.jsp"/>
 
 <form:form modelAttribute="message" method="post" cssClass="jumbotron">
 

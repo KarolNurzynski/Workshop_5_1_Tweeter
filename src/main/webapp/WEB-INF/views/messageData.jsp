@@ -14,6 +14,7 @@
     <title>Title</title>
 </head>
 <body>
+<jsp:include page="header.jsp"/>
 
 
 <h3>Message no: ${message.id}</h3>
