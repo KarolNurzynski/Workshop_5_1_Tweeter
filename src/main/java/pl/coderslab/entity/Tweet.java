@@ -3,40 +3,47 @@
 // (powered by Fernflower decompiler)
 //
 
-package pl.coderslab.model;
+package pl.coderslab.entity;
 
 import java.time.LocalDate;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import org.hibernate.validator.constraints.NotEmpty;
 
 @Entity
-@Table(
-        name = "tweet"
-)
+@Table(name = "tweet")
 public class Tweet {
+
     @Id
-    @GeneratedValue(
-            strategy = GenerationType.IDENTITY
-    )
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @NotNull
+
     @ManyToOne
+    @JoinColumn(name = "user_id")
     private User user;
-    @Size(
-            max = 160
-    )
+
+    @Size(max = 160)
     @NotEmpty
     private String text;
-    private LocalDate created;
+
+    private LocalDateTime created;
+
+    @OneToMany(mappedBy = "tweet", fetch = FetchType.EAGER)
+    private List<Comment> comments = new ArrayList<>();
 
     public Tweet() {
+    }
+
+    public List<Comment> getComments() {
+        return comments;
+    }
+
+    public void setComments(List<Comment> comments) {
+        this.comments = comments;
     }
 
     public Long getId() {
@@ -63,11 +70,11 @@ public class Tweet {
         this.text = text;
     }
 
-    public LocalDate getCreated() {
-        return this.created;
+    public LocalDateTime getCreated() {
+        return created;
     }
 
-    public void setCreated(LocalDate created) {
+    public void setCreated(LocalDateTime created) {
         this.created = created;
     }
 }

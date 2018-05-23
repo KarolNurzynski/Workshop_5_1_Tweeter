@@ -15,16 +15,12 @@
 </head>
 <body>
 
-<ul>
-    <c:forEach items="${tweets}" var="tweet">
-        <li>
-        <h2>${tweet.id}. ${tweet.title}</h2>
-        <p>Text: ${tweet.tweetText}</p>
-        <p>Created: ${tweet.created}</p>
-        <p>User id: ${tweet.user.id}</p>
-        </li>
-    </c:forEach>
-</ul>
+
+<h3>Tweet no: ${tweet.id}</h3>
+<p>Tweet text: </p>
+<p>${tweet.text}</p>
+<p>Created on: ${tweet.created}</p>
+<p>Added by user: ${tweet.user.email}</p>
 
 </body>
 </html>

@@ -17,11 +17,10 @@ import javax.validation.Valid;
 import javax.validation.Validator;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Collections;
 import java.util.List;
 
 @Controller
-public class HomeController {
+public class CommentController {
 
     @Autowired
     Validator validator;
@@ -35,36 +34,39 @@ public class HomeController {
     @Autowired
     CommentService commentService;
 
-    @GetMapping("/")
-    public String home(HttpSession sess, Model model) {
-        Long user_id = (Long) sess.getAttribute("user_id");
-        if (user_id!=null) {
-            model.addAttribute("tweet",new Tweet());
-            return "home";
-        } else {
-            return "redirect:/login";
-        }
+    @GetMapping("/comment/add/{tweet_id}")
+    public String addTweet(Model model){
+        model.addAttribute("comment",new Comment());
+        return "commentForm";
     }
 
-    @PostMapping("/")
-    public String home(@Valid @ModelAttribute Tweet tweet,
-                       BindingResult result,
-                       HttpSession sess) {
+    @PostMapping("/comment/add/{tweet_id}")
+    public String addTweet(@Valid @ModelAttribute Comment comment,
+                           BindingResult result,
+                           @PathVariable Long tweet_id,
+                           HttpSession sess){
         if (result.hasErrors()) {
-            return "home";
+            return "commentForm";
         }
         Long user_id = (Long) sess.getAttribute("user_id");
-        tweet.setUser(userService.findUser(user_id));
-        tweet.setCreated(LocalDateTime.now());
-        tweetService.saveTweet(tweet);
+        comment.setUser(userService.findUser(user_id));
+        comment.setTweet(tweetService.findTweet(tweet_id));
+        comment.setCreated(LocalDateTime.now());
+        commentService.saveComment(comment);
         return "redirect:/";
     }
 
-    ////////////////// MODEL ATTRIBUTES //////////////////////
+    //////////////// MODEL ATRIBUTES //////////////////////
+
+    @ModelAttribute("comments")
+    public List<Comment> comments() {
+        return commentService.findAllCommentsOrderByCreatedDesc();
+    }
+
 
     @ModelAttribute("tweets")
-    public List<Tweet> tweets() {
-        return tweetService.findAllTweetsOrderByCreatedDesc();
+    public List<Tweet> tweets(){
+    return tweetService.findAllTweets();
     }
 
     @ModelAttribute("users")
@@ -72,9 +74,5 @@ public class HomeController {
         return userService.findAllUsers();
     }
 
-    @ModelAttribute("comments")
-    public List<Comment> comments() {
-        return commentService.findAllCommentsOrderByCreatedDesc();
-    }
 
 }

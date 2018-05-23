@@ -18,10 +18,8 @@
 <ul>
     <c:forEach items="${tweets}" var="tweet">
         <li>
-        <h2>${tweet.id}. ${tweet.title}</h2>
-        <p>Text: ${tweet.tweetText}</p>
-        <p>Created: ${tweet.created}</p>
-        <p>User id: ${tweet.user.id}</p>
+            <h2>${tweet.text}</h2>
+            <p>Tweet no: ${tweet.id}. Created: ${tweet.created}</p>
         </li>
     </c:forEach>
 </ul>

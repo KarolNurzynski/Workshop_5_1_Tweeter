@@ -13,18 +13,10 @@
 </head>
 <body>
 
-<form:form modelAttribute="tweet" method="post" cssClass="jumbotron">
+<form:form modelAttribute="comment" method="post" cssClass="jumbotron">
 
-    <form:input path="title" placeHolder="Title" cssClass="form-conrol"/>Title<br>
-    <form:errors path="title"/><br>
-
-    <form:input path="tweetText" placeHolder="Tweet Text" cssClass="form-conrol"/>Tweet Text<br>
-    <form:errors path="tweetText"/><br>
-
-    <form:select path="user.id"
-                 items="${users}"
-                 itemLabel="lastName"
-                 itemValue="id"/>User<br>
+    <form:textarea rows="4" cols="50" path="text" placeHolder="text" cssClass="form-conrol"/>text<br>
+    <form:errors path="text"/><br>
 
     <input type="submit" value="Submit" class="btn btn-success"/>
 

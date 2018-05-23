@@ -3,16 +3,11 @@
 // (powered by Fernflower decompiler)
 //
 
-package pl.coderslab.model;
+package pl.coderslab.entity;
 
 import java.util.ArrayList;
 import java.util.List;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
+import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.groups.Default;
 import org.hibernate.validator.constraints.Email;
@@ -20,35 +15,40 @@ import org.hibernate.validator.constraints.NotEmpty;
 import pl.coderslab.validator.ValidationGroupLogIn;
 
 @Entity
-@Table(
-        name = "user"
-)
+@Table(name = "user")
+
 public class User {
+
     @Id
-    @GeneratedValue(
-            strategy = GenerationType.IDENTITY
-    )
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @NotEmpty
+
+    @NotEmpty(groups = {ValidationGroupLogIn.class})
+    @Column(unique = true)
     private String username;
-    @NotEmpty(
-            groups = {ValidationGroupLogIn.class, Default.class}
-    )
+
+    @NotEmpty
     private String password;
+
     @NotNull
     private Boolean enabled = false;
-    @NotEmpty(
-            groups = {ValidationGroupLogIn.class, Default.class}
-    )
-    @Email(
-            groups = {ValidationGroupLogIn.class, Default.class}
-    )
+
+    @NotEmpty
+    @Email
+    @Column(unique = true)
     private String email;
-    @NotNull
-    @OneToMany(
-            mappedBy = "user"
-    )
-    List<Tweet> tweets = new ArrayList();
+
+    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
+    private List<Tweet> tweets = new ArrayList();
+
+    @OneToMany(mappedBy = "user")
+    private List<Comment> comments = new ArrayList<>();
+
+    @OneToMany(mappedBy = "sender")
+    private List<Message> sentMessages = new ArrayList<>();
+
+    @OneToMany(mappedBy = "receiver")
+    private List<Message> receivedMessages = new ArrayList<>();
 
     public User() {
     }
@@ -99,5 +99,29 @@ public class User {
 
     public void setTweets(List<Tweet> tweets) {
         this.tweets = tweets;
+    }
+
+    public List<Comment> getComments() {
+        return comments;
+    }
+
+    public void setComments(List<Comment> comments) {
+        this.comments = comments;
+    }
+
+    public List<Message> getSentMessages() {
+        return sentMessages;
+    }
+
+    public void setSentMessages(List<Message> sentMessages) {
+        this.sentMessages = sentMessages;
+    }
+
+    public List<Message> getReceivedMessages() {
+        return receivedMessages;
+    }
+
+    public void setReceivedMessages(List<Message> receivedMessages) {
+        this.receivedMessages = receivedMessages;
     }
 }

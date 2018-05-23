@@ -15,12 +15,19 @@
 </head>
 <body>
 
+<h2>List of messages: </h2>
+
 <ul>
-    <c:forEach items="${users}" var="user">
+    <c:forEach items="${messages}" var="message">
         <li>
-        <h2>${user.id}. ${user.firstName} ${user.lastName}; Email: ${user.email}</h2>
-        <p><a href="/user/edit/${user.id}">Edit user  </a><a href="/user/delete/${user.id}">Delete user</a></p>
-        <p><a href="/user/${user.id}/tweets">User tweets  </a><a href="/user/delete/${user.id}">Delete user</a></p>
+            <p>
+                Message id: ${message.id}. Created: ${tweet.created}
+            </p>
+            <p>
+                Sent by: @${message.sender.username}.
+                Received by: @${message.receiver.username}
+            </p>
+            <h3>${message.text}</h3>
         </li>
     </c:forEach>
 </ul>
