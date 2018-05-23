@@ -34,6 +34,14 @@ public class MessageService {
         return messageRepository.findAllByOrderByCreatedDesc();
     }
 
+    public List<Message> findAllMessagesBySenderIdOrderByCreatedDesc(Long id) {
+        return messageRepository.findAllBySenderIdOrderByCreatedDesc(id);
+    }
+
+    public List<Message> findAllMessagesByReceiverIdOrderByCreatedDesc(Long id) {
+        return messageRepository.findAllByReceiverIdOrderByCreatedDesc(id);
+    }
+
     public Message editMessage(Message message) {
         return messageRepository.save(message);
     }

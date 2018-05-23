@@ -40,14 +40,6 @@ public class HomeController {
         model.addAttribute("tweet",new Tweet());
         return "home";
     }
-//        Long user_id = (Long) sess.getAttribute("user_id");
-//        if (user_id!=null) {
-//            model.addAttribute("tweet",new Tweet());
-//            return "home";
-//        } else {
-//            return "redirect:/login";
-//        }
-//    }
 
     @PostMapping("/")
     public String home(@Valid @ModelAttribute Tweet tweet,
@@ -62,16 +54,6 @@ public class HomeController {
         tweetService.saveTweet(tweet);
         return "redirect:/";
     }
-
-//        if (result.hasErrors()) {
-//            return "home";
-//        }
-//        Long user_id = (Long) sess.getAttribute("user_id");
-//        tweet.setUser(userService.findUser(user_id));
-//        tweet.setCreated(LocalDateTime.now());
-//        tweetService.saveTweet(tweet);
-//        return "redirect:/";
-//    }
 
     ////////////////// MODEL ATTRIBUTES //////////////////////
 

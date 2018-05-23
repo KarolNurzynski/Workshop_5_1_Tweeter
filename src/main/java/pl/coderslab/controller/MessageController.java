@@ -61,54 +61,45 @@ public class MessageController {
         messageService.saveMessage(message);
         List<Message> messages = messageService.findAllMessagesOrderByCreatedDesc();
         model.addAttribute("messages", messages);
-        return "messageList";
+        return "redirect:/message/show/"+sender_id;
+    }
+
+    @GetMapping("/message/show/{sender_id}")
+    public String viewMessages(@PathVariable Long sender_id, HttpSession sess, Model model) {
+        Long user_id = (Long) sess.getAttribute("user_id");
+        if (sender_id==user_id) {
+            model.addAttribute("receivedMessages",messageService.findAllMessagesByReceiverIdOrderByCreatedDesc(user_id));
+            model.addAttribute("sentMessages",messageService.findAllMessagesBySenderIdOrderByCreatedDesc(user_id));
+            return "messageList";
+        } else {
+            return "redirect:/message/show/"+sender_id;
+        }
+    }
+
+    @PostMapping("/message/show/{sender_id}")
+    public String viewMessages(@PathVariable Long sender_id) {
+        return "redirect:/message/show/"+sender_id;
     }
 
 
-
-//    @GetMapping("/tweet/add")
-//    public String addTweet(Model model){
-//        model.addAttribute("tweet",new Tweet());
-//        return "tweetForm";
-//    }
-//
-//    @PostMapping("/tweet/add")
-//    public String addTweet(@Valid @ModelAttribute Tweet tweet, BindingResult result){
-//        if (result.hasErrors()) {
-//            return "tweetForm";
-//        }
-//        tweet.setCreated(LocalDateTime.now());
-//        tweetService.saveTweet(tweet);
-//        return "redirect:/tweet/show";
-//    }
-//
-//    @GetMapping("tweet/show")
-//    public String showAllTweets() {
-//        return "tweetList";
-//    }
-//
-//    @GetMapping("tweet/show/{id}")
-//    public String showAllTweets(@PathVariable Long id, Model model) {
-//        model.addAttribute("tweet", tweetService.findTweet(id));
-//        return "tweetData";
-//    }
-//
-//
-//
-////
-////
-////
-////
-//
-//    @ModelAttribute("tweets")
-//    public List<Tweet> tweets(){
-//    return tweetService.findAllTweets();
-//    }
-//
-//    @ModelAttribute("users")
-//    public List<User> users(){
-//        return userService.findAllUsers();
-//    }
+    @GetMapping("/message/showMessage/{message_id}")
+    public String showMessage(@PathVariable Long message_id,
+                              HttpSession sess,
+                              Model model) {
+        Long user_id = (Long) sess.getAttribute("user_id");
+        Message message = messageService.findMessage(message_id);
+        if ((message.getSender().getId()==user_id)) {
+            model.addAttribute("message",message);
+            return "messageData";
+        } else if ((message.getReceiver().getId()==user_id)) {
+            message.setReadStatus(1);
+            messageService.saveMessage(message);
+            model.addAttribute("message",message);
+            return "messageData";
+        }else {
+            return "redirect:/message/show/"+user_id;
+        }
+    }
 
     ////////////////////   MODEL ATTRIBUTES   /////////////
 

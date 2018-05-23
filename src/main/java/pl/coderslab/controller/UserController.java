@@ -72,11 +72,17 @@ public class UserController {
     }
 
     @GetMapping("/userprofile/{user_id}")
-    public String userPage(@PathVariable Long user_id, Model model) {
-        User user = userService.findUser(user_id);
-        user.setPassword("");
-        model.addAttribute("user",user);
-        return "userProfile";
+    public String userPage(@PathVariable Long user_id, Model model, HttpSession sess) {
+        Long user_sess_id = (Long) sess.getAttribute("user_id");
+        if (user_id==user_sess_id) {
+            User user = userService.findUser(user_id);
+            user.setPassword("");
+            model.addAttribute("user",user);
+            return "userProfile";
+        } else {
+            return "redirect:/userprofile/"+user_sess_id;
+        }
+
     }
 
     @RequestMapping(value="/userprofile/{user_id}", method=RequestMethod.POST, params="submit=changeEmail")
@@ -127,7 +133,5 @@ public class UserController {
     public List<User> users(){
         return userService.findAllUsers();
     }
-
-
 
 }
