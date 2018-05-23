@@ -8,18 +8,13 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import pl.coderslab.entity.Tweet;
 import pl.coderslab.entity.User;
-import pl.coderslab.external.BCrypt;
-import pl.coderslab.repository.TweetRepository;
-import pl.coderslab.repository.UserRepository;
 import pl.coderslab.service.TweetService;
 import pl.coderslab.service.UserService;
-import pl.coderslab.validator.ValidationGroupLogIn;
+import pl.coderslab.validator.ValidEmail;
 
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import javax.validation.Validator;
-import javax.validation.groups.Default;
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Controller
@@ -59,108 +54,62 @@ public class UserController {
         }
     }
 
-    @GetMapping("/userpage/{user_id}")
-    public String userPage(HttpSession sess, Model model) {
-        Long user_id = (Long) sess.getAttribute("user_id");
-        if (user_id!=null) {
-            model.addAttribute("tweet",new Tweet());
-            return "home";
-        } else {
-            return "redirect:/login";
-        }
+    @GetMapping("user/show")
+    public String showAllUsers() {
+        return "userList";
     }
 
-    @PostMapping("/userpage/{user_id}")
-    public String userPage(@Valid @ModelAttribute Tweet tweet,
-                       BindingResult result,
-                       HttpSession sess) {
-        if (result.hasErrors()) {
-            return "home";
-        }
-        Long user_id = (Long) sess.getAttribute("user_id");
-        tweet.setUser(userService.findUser(user_id));
-        tweet.setCreated(LocalDateTime.now());
-        tweetService.saveTweet(tweet);
-        return "redirect:/";
-    }
-
-
-    @GetMapping("user/show/{id}")
-    public String showUser(@PathVariable Long id, Model model, HttpSession sess) {
-        User user = userService.findUser(id);
-        if (user!=null) {
-            model.addAttribute("user",user);
-            model.addAttribute("tweets",tweetService.findAllTweetsByUserIdOrderByCreatedDesc(id));
+    @GetMapping("user/show/{user_id}")
+    public String showUser(@PathVariable Long user_id, Model model, HttpSession sess) {
+        User user = userService.findUser(user_id);
+        if (user != null) {
+            model.addAttribute("user", user);
+            model.addAttribute("tweets", tweetService.findAllTweetsByUserIdOrderByCreatedDesc(user_id));
             return "userData";
         } else {
             return "redirect:/user/show";
         }
     }
 
-    @GetMapping("user/show")
-    public String showAllUsers() {
-        return "userList";
+    @GetMapping("/userprofile/{user_id}")
+    public String userPage(@PathVariable Long user_id, Model model) {
+        User user = userService.findUser(user_id);
+        user.setPassword("");
+        model.addAttribute("user",user);
+        return "userProfile";
+    }
+
+    @RequestMapping(value="/userprofile/{user_id}", method=RequestMethod.POST, params="submit=changeEmail")
+    public String editEmail(@Validated({ValidEmail.class}) @ModelAttribute User user,
+                       BindingResult result,
+                       @PathVariable Long user_id) {
+        if (result.hasErrors()) {
+            return "userProfile";
+        }
+        user.setPassword(userService.findUser(user_id).getPassword());
+        userService.editUser(user);
+        return "redirect:/logout";
     }
 
 
+    @RequestMapping(value="/userprofile/{user_id}", method=RequestMethod.POST, params="submit=changePassword")
+    public String editPassword(@Validated({ValidEmail.class}) @ModelAttribute User user,
+                           BindingResult result,
+                           @PathVariable Long user_id) {
 
+        if (result.hasErrors()) {
+            return "userProfile";
+        }
+        userService.saveUser(user);
+        return "redirect:/logout";
+    }
 
-//    @GetMapping("/user/{id}/tweets")
-//    public String showTweetsByUserId(@PathVariable Long id, Model entity){
-//        List<Tweet> tweets = tweetRepository.findAllByUserId(id);
-//        entity.addAttribute("tweets",tweets);
-//
-//        return "TweetByUserId";
-//    }
-//
-//    @GetMapping("/user/search-tweets")
-//    public String showTweetsByTitleCreated(Model entity){
-//        List<Tweet> tweets = tweetRepository.findAllTweetsByTitleStartingWithSortedByCreated("a%");
-//        entity.addAttribute("tweets",tweets);
-//
-//        return "TweetByTitlePart";
-//    }
-//
-//
-//
-//    @GetMapping("/user/clear")
-//    public String clearUsersandTweets(Model model) {
-//        userRepository.deleteAll();
-//        return "UserList";
-//    }
-//
-//    @GetMapping("/user/all")
-//    public String showUsers(Model model) {
-//
-//        List<User> users = userRepository.findAll();
-//        model.addAttribute("users",users);
-//        return "UserList";
-//    }
-//
-//    @GetMapping("/user/delete/{id}")
-//    @ResponseBody
-//    public String deleteUser(@PathVariable Long id, Model model){
-//        userRepository.delete(id);
-//        return "User deleted";
-//    }
-//
-//    @GetMapping("/user/edit/{id}")
-//    public String updateUser(@PathVariable Long id, Model model){
-//        model.addAttribute("user", userRepository.findOne(id));
-//        return "UserForm";
-//    }
-//
-//    @PostMapping("/user/edit/{id}")
-//    public String updateUser(@Valid @ModelAttribute User user, BindingResult result) {
-//        if (result.hasErrors()) {
-//            return "UserForm";
-//        }
-//        userRepository.save(user);
-//        return "redirect:/user/all";
-//    }
-//
-
-//
+    @GetMapping("/user/delete/{user_id}")
+    @ResponseBody
+    public String deleteUser(@PathVariable Long user_id, Model model){
+        userService.deleteUser(user_id);
+        return "redirect:/logout";
+    }
 
     ////////////////// MODEL ATTRIBUTES //////////////////////
 

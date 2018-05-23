@@ -1,8 +1,6 @@
 package pl.coderslab.controller;
 
-import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import javax.validation.Valid;
 import javax.validation.Validator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -12,9 +10,8 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import pl.coderslab.entity.User;
 import pl.coderslab.external.BCrypt;
-import pl.coderslab.repository.UserRepository;
 import pl.coderslab.service.UserService;
-import pl.coderslab.validator.ValidationGroupLogIn;
+import pl.coderslab.validator.ValidEmailPassword;
 
 @Controller
 public class LoginController {
@@ -33,7 +30,7 @@ public class LoginController {
     }
 
     @PostMapping("/login")
-    public String login(@Validated @ModelAttribute User user,
+    public String login(@Validated({ValidEmailPassword.class}) @ModelAttribute User user,
                         BindingResult result,
                         HttpSession sess,
                         Model model) {

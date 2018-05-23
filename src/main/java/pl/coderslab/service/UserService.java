@@ -26,6 +26,10 @@ public class UserService {
         userRepository.save(user);
     }
 
+    public void editUser(User user) {
+        userRepository.save(user);
+    }
+
     public User findUser(Long id) {
         return userRepository.findOne(id);
     }
@@ -42,21 +46,9 @@ public class UserService {
         return userRepository.findAll();
     }
 
-    public User editUser(User user) {
-        return userRepository.save(user);
-    }
-
-    public void editUserPassword(User user) {
-        String passwordSalt = BCrypt.gensalt();
-        String newPass = BCrypt.hashpw(user.getPassword(), passwordSalt);
-        user.setPassword(newPass);
-        userRepository.save(user);
-    }
-
     public void deleteUser(Long id) {
         userRepository.delete(id);
     }
-
 
 
 }

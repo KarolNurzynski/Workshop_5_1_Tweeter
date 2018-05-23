@@ -17,6 +17,7 @@
 
 <c:if test="${not empty sessionScope}">
     <p><a href="/logout">Logout</a></p>
+    <p><a href="/userprofile/${sessionScope.user_id}">User profile</a></p>
 </c:if>
 
 

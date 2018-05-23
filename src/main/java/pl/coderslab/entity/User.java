@@ -12,7 +12,8 @@ import javax.validation.constraints.NotNull;
 import javax.validation.groups.Default;
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotEmpty;
-import pl.coderslab.validator.ValidationGroupLogIn;
+import pl.coderslab.validator.ValidEmailPassword;
+import pl.coderslab.validator.ValidEmail;
 
 @Entity
 @Table(name = "user")
@@ -23,18 +24,18 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotEmpty(groups = {ValidationGroupLogIn.class})
+    @NotEmpty(groups = {Default.class})
     @Column(unique = true)
     private String username;
 
-    @NotEmpty
+    @NotEmpty(groups = {ValidEmailPassword.class, Default.class})
     private String password;
 
     @NotNull
     private Boolean enabled = false;
 
-    @NotEmpty
-    @Email
+    @NotEmpty(groups = {ValidEmailPassword.class, ValidEmail.class, Default.class})
+    @Email(groups = {ValidEmailPassword.class, ValidEmail.class, Default.class})
     @Column(unique = true)
     private String email;
 

@@ -77,7 +77,7 @@ public class AppConfig extends WebMvcConfigurerAdapter {
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor((getAuthorizationManager()))
                 .addPathPatterns("/**")
-                .excludePathPatterns("/login");
+                .excludePathPatterns("/login","/user/add");
     }
 
 

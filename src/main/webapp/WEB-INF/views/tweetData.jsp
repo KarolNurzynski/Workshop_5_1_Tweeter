@@ -13,7 +13,7 @@
 <html>
 <head>
     <title>Title</title>
-</head>
+</head>You've successfully authenticated, but GitHub does not provide shell access.
 <body>
 <jsp:include page="header.jsp"/>
 
